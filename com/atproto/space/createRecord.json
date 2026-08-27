@@ -9,12 +9,17 @@
         "encoding": "application/json",
         "schema": {
           "type": "object",
-          "required": ["space", "collection", "record"],
+          "required": ["space", "repo", "collection", "record"],
           "properties": {
             "space": {
               "type": "string",
-              "format": "uri",
+              "format": "space-ref",
               "description": "Reference to the space."
+            },
+            "repo": {
+              "type": "string",
+              "format": "did",
+              "description": "The DID of the repo to write to (the authenticated member)."
             },
             "collection": {
               "type": "string",
@@ -34,11 +39,6 @@
             "record": {
               "type": "unknown",
               "description": "The record itself. Must contain a $type field."
-            },
-            "swapCommit": {
-              "type": "string",
-              "format": "cid",
-              "description": "Compare and swap with the previous commit by CID."
             }
           }
         }
@@ -51,7 +51,8 @@
           "properties": {
             "uri": {
               "type": "string",
-              "description": "URI of the created record. Scheme TBD."
+              "format": "at-uri",
+              "description": "URI of the created record."
             },
             "cid": {
               "type": "string",
@@ -66,8 +67,11 @@
       },
       "errors": [
         {
-          "name": "InvalidSwap",
-          "description": "Indicates that 'swapCommit' didn't match current commit."
+          "name": "SpaceNotFound"
+        },
+        {
+          "name": "RecordAlreadyExists",
+          "description": "A record already exists at this collection and rkey. Retry with a different rkey, or use putRecord."
         }
       ]
     }

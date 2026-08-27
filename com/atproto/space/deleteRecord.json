@@ -4,17 +4,22 @@
   "defs": {
     "main": {
       "type": "procedure",
-      "description": "Delete a record in a permissioned space, or ensure it doesn't exist. Requires auth, implemented by PDS.",
+      "description": "Delete a record from a permissioned space, or ensure it doesn't exist. Succeeds whether or not the record was present. Requires auth, implemented by PDS.",
       "input": {
         "encoding": "application/json",
         "schema": {
           "type": "object",
-          "required": ["space", "collection", "rkey"],
+          "required": ["space", "repo", "collection", "rkey"],
           "properties": {
             "space": {
               "type": "string",
-              "format": "uri",
+              "format": "space-ref",
               "description": "Reference to the space."
+            },
+            "repo": {
+              "type": "string",
+              "format": "did",
+              "description": "The DID of the repo to delete from (the authenticated member)."
             },
             "collection": {
               "type": "string",
@@ -25,16 +30,6 @@
               "type": "string",
               "format": "record-key",
               "description": "The Record Key."
-            },
-            "swapRecord": {
-              "type": "string",
-              "format": "cid",
-              "description": "Compare and swap with the previous record by CID."
-            },
-            "swapCommit": {
-              "type": "string",
-              "format": "cid",
-              "description": "Compare and swap with the previous commit by CID."
             }
           }
         }
@@ -46,7 +41,11 @@
           "properties": {}
         }
       },
-      "errors": [{ "name": "InvalidSwap" }]
+      "errors": [
+        {
+          "name": "SpaceNotFound"
+        }
+      ]
     }
   }
 }

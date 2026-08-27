@@ -9,13 +9,17 @@
         "encoding": "application/json",
         "schema": {
           "type": "object",
-          "required": ["space", "collection", "rkey", "record"],
-          "nullable": ["swapRecord"],
+          "required": ["space", "repo", "collection", "rkey", "record"],
           "properties": {
             "space": {
               "type": "string",
-              "format": "uri",
+              "format": "space-ref",
               "description": "Reference to the space."
+            },
+            "repo": {
+              "type": "string",
+              "format": "did",
+              "description": "The DID of the repo to write to (the authenticated member)."
             },
             "collection": {
               "type": "string",
@@ -35,16 +39,6 @@
             "record": {
               "type": "unknown",
               "description": "The record to write."
-            },
-            "swapRecord": {
-              "type": "string",
-              "format": "cid",
-              "description": "Compare and swap with the previous record by CID."
-            },
-            "swapCommit": {
-              "type": "string",
-              "format": "cid",
-              "description": "Compare and swap with the previous commit by CID."
             }
           }
         }
@@ -57,7 +51,8 @@
           "properties": {
             "uri": {
               "type": "string",
-              "description": "URI of the written record. Scheme TBD."
+              "format": "at-uri",
+              "description": "URI of the written record."
             },
             "cid": {
               "type": "string",
@@ -70,7 +65,11 @@
           }
         }
       },
-      "errors": [{ "name": "InvalidSwap" }]
+      "errors": [
+        {
+          "name": "SpaceNotFound"
+        }
+      ]
     }
   }
 }
